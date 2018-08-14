@@ -300,6 +300,12 @@ RUN docker-php-source extract \
 	&& rm -rf /usr/src/php \
 	&& docker-php-source delete 
 
+##redis server
+RUN apk upgrade --update && \
+	apk add redis && \
+ 	sed -i '/^daemonize/s/yes/no/g' /etc/redis.conf && \
+	#sed -i '$a requirepass 11' /etc/redis.conf 
+
 # Add Scripts
 ADD scripts/start.sh /start.sh
 ADD scripts/pull /usr/bin/pull
@@ -313,6 +319,6 @@ ADD src/ /var/www/html/
 ADD errors/ /var/www/errors
 
 
-EXPOSE 443 80
+EXPOSE 443 80 6379
 
 CMD ["/start.sh"]
